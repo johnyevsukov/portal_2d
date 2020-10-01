@@ -6,7 +6,6 @@ import time
 import turtle
 
 # For less jerky player movement you can uncomment the grayed out code, comment out the four current player movement code lines, and set SPEED to 4
-# The ice floor disables portal use :(
 
 SPEED = 20
 PORTAL_SPEED = 15
@@ -193,12 +192,28 @@ def right():
 # Ice floor movements
 def up_ice():
     player.sety(player.ycor() + ice_speed)
+    if player.ycor() >= orange_portal.ycor() and player.xcor() >= (orange_portal.xcor() - 45) and player.xcor() <= (orange_portal.xcor() + 45) and is_touching_portal(player, orange_portal):
+        blue_portal_check()
+    if player.ycor() >= blue_portal.ycor() and player.xcor() >= (blue_portal.xcor() - 45) and player.xcor() <= (blue_portal.xcor() + 45) and is_touching_portal(player, blue_portal):
+        orange_portal_check()
 def down_ice():
     player.sety(player.ycor() + ice_speed)
+    if player.ycor() <= orange_portal.ycor() and player.xcor() >= (orange_portal.xcor() - 45) and player.xcor() <= (orange_portal.xcor() + 45) and is_touching_portal(player, orange_portal):
+        blue_portal_check()
+    if player.ycor() <= blue_portal.ycor() and player.xcor() >= (blue_portal.xcor() - 45) and player.xcor() <= (blue_portal.xcor() + 45) and is_touching_portal(player, blue_portal):
+        orange_portal_check()
 def left_ice():
     player.setx(player.xcor() + ice_speed)
+    if player.xcor() <= orange_portal.xcor() and player.ycor() >= (orange_portal.ycor() - 45) and player.ycor() <= (orange_portal.ycor() + 45) and is_touching_portal(player, orange_portal):
+        blue_portal_check()
+    if player.xcor() <= blue_portal.xcor() and player.ycor() >= (blue_portal.ycor() - 45) and player.ycor() <= (blue_portal.ycor() + 45) and is_touching_portal(player, blue_portal):
+        orange_portal_check()
 def right_ice():
     player.setx(player.xcor() + ice_speed)
+    if player.xcor() >= orange_portal.xcor() and player.ycor() >= (orange_portal.ycor() - 45) and player.ycor() <= (orange_portal.ycor() + 45) and is_touching_portal(player, orange_portal):
+        blue_portal_check()
+    if player.xcor() >= blue_portal.xcor() and player.ycor() >= (blue_portal.ycor() - 45) and player.ycor() <= (blue_portal.ycor() + 45) and is_touching_portal(player, blue_portal):
+        orange_portal_check()
 
 
 # Check how the player exits the blue portal
