@@ -8,7 +8,7 @@ import turtle
 # For less jerky player movement you can uncomment the grayed out code, comment out the four current player movement code lines, and set SPEED to 4
 
 SPEED = 20
-PORTAL_SPEED = 15
+PORTAL_SPEED = 30
 GLIDE_DURATION_IN_SECONDS = 4
 
 ice_speed = 15
