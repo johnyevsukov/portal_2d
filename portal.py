@@ -26,6 +26,8 @@ acquired_portal_gun = False
 orange_portal_state = "ready"
 blue_portal_state = "ready"
 
+portal_gun_acquired_sound = ["a"]
+
 turret_sound_bucket = []
 turret_lost_bucket = []
 
@@ -316,6 +318,9 @@ def equipped_portal_gun():
     global acquired_portal_gun
     if is_touching(portal_gun, player):
         acquired_portal_gun = True
+        if portal_gun_acquired_sound:
+            os.system("afplay handheld_portal_device.wav&")
+            portal_gun_acquired_sound.pop()
 
     if acquired_portal_gun:
         # UP
