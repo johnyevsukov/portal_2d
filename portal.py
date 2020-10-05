@@ -22,6 +22,8 @@ set_time_b = datetime.now()
 
 looper = "left"
 
+portal_gun_color = "blue"
+
 acquired_portal_gun = False
 orange_portal_state = "ready"
 blue_portal_state = "ready"
@@ -37,7 +39,7 @@ left_token_bucket = []
 right_token_bucket = []
 
 turret_sounds = ["afplay turret_there_you_are.wav&", "afplay turret_I_see_you.wav&", "afplay turret_gotcha.wav&"]
-portal_gun_gifs = ["portal_gun_up.gif", "portal_gun_down.gif", "portal_gun_left.gif", "portal_gun_right.gif", "control_menu.gif"]
+portal_gun_gifs = ["portal_gun_up.gif", "portal_gun_down.gif", "portal_gun_left.gif", "portal_gun_right.gif", "portal_gun_orange_up.gif", "portal_gun_orange_down.gif", "portal_gun_orange_left.gif", "portal_gun_orange_right.gif",  "control_menu.gif"]
 
 for gif in portal_gun_gifs:
     turtle.register_shape(gif)
@@ -326,19 +328,31 @@ def equipped_portal_gun():
         # UP
         if player.heading() == 90:
             portal_gun.setposition(player.xcor()-15, player.ycor()+5)
-            portal_gun.shape("portal_gun_up.gif")
+            if portal_gun_color == "blue":
+                portal_gun.shape("portal_gun_up.gif")
+            if portal_gun_color == "orange":
+                portal_gun.shape("portal_gun_orange_up.gif")
         # DOWN
         if player.heading() == 270:
             portal_gun.setposition(player.xcor()+16, player.ycor()-3)
-            portal_gun.shape("portal_gun_down.gif")
+            if portal_gun_color == "blue":
+                portal_gun.shape("portal_gun_down.gif")
+            if portal_gun_color == "orange":
+                portal_gun.shape("portal_gun_orange_down.gif")
         # LEFT
         if player.heading() == 180:
             portal_gun.setposition(player.xcor()-4, player.ycor()-15)
-            portal_gun.shape("portal_gun_left.gif")
+            if portal_gun_color == "blue":
+                portal_gun.shape("portal_gun_left.gif")
+            if portal_gun_color == "orange":
+                portal_gun.shape("portal_gun_orange_left.gif")
         # RIGHT
         if player.heading() == 0:
             portal_gun.setposition(player.xcor()+5, player.ycor()+15)
-            portal_gun.shape("portal_gun_right.gif")
+            if portal_gun_color == "blue":
+                portal_gun.shape("portal_gun_right.gif")
+            if portal_gun_color == "orange":
+                portal_gun.shape("portal_gun_orange_right.gif")
 
 
 # Has the enemy go in circles according to two timers constantly switching back and forth. This could aslo be achieved with a for loop with fd() and lt()
@@ -379,7 +393,9 @@ def enemy_ai_idle_state():
 
 def fire_orange_portal_up():
     global orange_portal_state
+    global portal_gun_color
     if orange_portal_state == "ready":
+        portal_gun_color = "orange"
         player.setheading(90)
         portal_gun.setposition(player.xcor()-15, player.ycor()+5)
         orange_portal.shapesize(0.5, 0.5)
@@ -395,7 +411,9 @@ def fire_orange_portal_up():
 
 def fire_orange_portal_down():
     global orange_portal_state
+    global portal_gun_color
     if orange_portal_state == "ready":
+        portal_gun_color = "orange"
         player.setheading(270)
         portal_gun.setposition(player.xcor()+16, player.ycor()-3)
         orange_portal.shapesize(0.5, 0.5)
@@ -411,7 +429,9 @@ def fire_orange_portal_down():
 
 def fire_orange_portal_left():
     global orange_portal_state
+    global portal_gun_color
     if orange_portal_state == "ready":
+        portal_gun_color = "orange"
         player.setheading(180)
         portal_gun.setposition(player.xcor()-4, player.ycor()-15)
         orange_portal.shapesize(0.5, 0.5)
@@ -427,7 +447,9 @@ def fire_orange_portal_left():
 
 def fire_orange_portal_right():
     global orange_portal_state
+    global portal_gun_color
     if orange_portal_state == "ready":
+        portal_gun_color = "orange"
         player.setheading(0)
         portal_gun.setposition(player.xcor()+5, player.ycor()+15)
         orange_portal.shapesize(0.5, 0.5)
@@ -443,7 +465,9 @@ def fire_orange_portal_right():
 
 def fire_blue_portal_up():
     global blue_portal_state
+    global portal_gun_color
     if blue_portal_state == "ready":
+        portal_gun_color = "blue"
         player.setheading(90)
         portal_gun.setposition(player.xcor()-15, player.ycor()+5)
         blue_portal.shapesize(0.5, 0.5)
@@ -459,7 +483,9 @@ def fire_blue_portal_up():
 
 def fire_blue_portal_down():
     global blue_portal_state
+    global portal_gun_color
     if blue_portal_state == "ready":
+        portal_gun_color = "blue"
         player.setheading(270)
         portal_gun.setposition(player.xcor()+16, player.ycor()-3)
         blue_portal.shapesize(0.5, 0.5)
@@ -475,7 +501,9 @@ def fire_blue_portal_down():
 
 def fire_blue_portal_left():
     global blue_portal_state
+    global portal_gun_color
     if blue_portal_state == "ready":
+        portal_gun_color = "blue"
         player.setheading(180)
         portal_gun.setposition(player.xcor()-4, player.ycor()-15)
         blue_portal.shapesize(0.5, 0.5)
@@ -491,7 +519,9 @@ def fire_blue_portal_left():
 
 def fire_blue_portal_right():
     global blue_portal_state
+    global portal_gun_color
     if blue_portal_state == "ready":
+        portal_gun_color = "blue"
         player.setheading(0)
         portal_gun.setposition(player.xcor()+5, player.ycor()+15)
         blue_portal.shapesize(0.5, 0.5)
