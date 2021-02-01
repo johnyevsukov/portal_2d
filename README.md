@@ -24,5 +24,4 @@ Run the game:
     make game
 
 
-Note: You will need to instll Python3 and have it available in your PATH.
-
+__Note:__ You will need to have Python3 installed and have it available in your PATH.
