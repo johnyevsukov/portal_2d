@@ -25,3 +25,9 @@ Run the game:
 
 
 __Note:__ You will need to have Python3 installed and have it available in your PATH.
+
+
+----
+#### Demo
+
+![](demo/demo.gif)
