@@ -38,24 +38,46 @@ down_token_bucket = []
 left_token_bucket = []
 right_token_bucket = []
 
-turret_sounds = ["afplay assets/sounds/turret_there_you_are.wav&", "afplay assets/sounds/turret_I_see_you.wav&", "afplay assets/sounds/turret_gotcha.wav&"]
-portal_gun_gifs = ["assets/sprites/portal_gun_up.gif", "assets/sprites/portal_gun_down.gif", "assets/sprites/portal_gun_left.gif", "assets/sprites/portal_gun_right.gif", "assets/sprites/portal_gun_orange_up.gif", "assets/sprites/portal_gun_orange_down.gif", "assets/sprites/portal_gun_orange_left.gif", "assets/sprites/portal_gun_orange_right.gif",  "assets/sprites/control_menu.gif"]
+turret_sounds = [
+    "afplay assets/sounds/turret_there_you_are.wav&",
+    "afplay assets/sounds/turret_I_see_you.wav&",
+    "afplay assets/sounds/turret_gotcha.wav&",
+]
+portal_gun_gifs = [
+    "assets/sprites/portal_gun_up.gif",
+    "assets/sprites/portal_gun_down.gif",
+    "assets/sprites/portal_gun_left.gif",
+    "assets/sprites/portal_gun_right.gif",
+    "assets/sprites/portal_gun_orange_up.gif",
+    "assets/sprites/portal_gun_orange_down.gif",
+    "assets/sprites/portal_gun_orange_left.gif",
+    "assets/sprites/portal_gun_orange_right.gif",
+    "assets/sprites/control_menu.gif",
+]
 
 for gif in portal_gun_gifs:
     turtle.register_shape(gif)
 
 # Sets the start glide times just over the GLIDE_DURATION_IN_SECONDS to prevent uncommanded gliding
 global STARTED_GLIDING_UP_AT
-STARTED_GLIDING_UP_AT = datetime.now() - timedelta(seconds=GLIDE_DURATION_IN_SECONDS + 1)
+STARTED_GLIDING_UP_AT = datetime.now() - timedelta(
+    seconds=GLIDE_DURATION_IN_SECONDS + 1
+)
 
 global STARTED_GLIDING_RIGHT_AT
-STARTED_GLIDING_RIGHT_AT = datetime.now() - timedelta(seconds=GLIDE_DURATION_IN_SECONDS + 1)
+STARTED_GLIDING_RIGHT_AT = datetime.now() - timedelta(
+    seconds=GLIDE_DURATION_IN_SECONDS + 1
+)
 
 global STARTED_GLIDING_LEFT_AT
-STARTED_GLIDING_LEFT_AT = datetime.now() - timedelta(seconds=GLIDE_DURATION_IN_SECONDS + 1)
+STARTED_GLIDING_LEFT_AT = datetime.now() - timedelta(
+    seconds=GLIDE_DURATION_IN_SECONDS + 1
+)
 
 global STARTED_GLIDING_DOWN_AT
-STARTED_GLIDING_DOWN_AT = datetime.now() - timedelta(seconds=GLIDE_DURATION_IN_SECONDS + 1)
+STARTED_GLIDING_DOWN_AT = datetime.now() - timedelta(
+    seconds=GLIDE_DURATION_IN_SECONDS + 1
+)
 
 # Game screen
 screen = turtle.Screen()
@@ -81,7 +103,7 @@ border_pen.hideturtle()
 control_menu = turtle.Turtle()
 control_menu.speed(0)
 control_menu.penup()
-control_menu.setposition(0,0)
+control_menu.setposition(0, 0)
 control_menu.shape("assets/sprites/control_menu.gif")
 control_menu.hideturtle()
 
@@ -92,7 +114,7 @@ player.penup()
 player.color("darkorange")
 player.shape("circle")
 player.setheading(90)
-player.setposition(0,-375)
+player.setposition(0, -375)
 
 # Enemy AI
 enemy_ai = turtle.Turtle()
@@ -101,24 +123,24 @@ enemy_ai.penup()
 enemy_ai.color("white")
 enemy_ai.shape("square")
 enemy_ai.setheading(270)
-enemy_ai.setposition(0,375)
+enemy_ai.setposition(0, 375)
 
 # Poratl gun
 portal_gun = turtle.Turtle()
 portal_gun.speed(0)
 portal_gun.shape("assets/sprites/portal_gun_right.gif")
 portal_gun.penup()
-portal_gun.setposition(-375,0)
+portal_gun.setposition(-375, 0)
 
-# Orange portal 
+# Orange portal
 orange_portal = turtle.Turtle()
 orange_portal.color("orange")
 orange_portal.shape("circle")
 orange_portal.penup()
 orange_portal.speed(0)
-orange_portal.shapesize(0.5,0.5)
+orange_portal.shapesize(0.5, 0.5)
 orange_portal.hideturtle()
-orange_portal.setposition(1000,1000)
+orange_portal.setposition(1000, 1000)
 
 # Blue portal
 blue_portal = turtle.Turtle()
@@ -126,69 +148,116 @@ blue_portal.color("lightblue")
 blue_portal.shape("circle")
 blue_portal.penup()
 blue_portal.speed(0)
-blue_portal.shapesize(0.5,0.5)
+blue_portal.shapesize(0.5, 0.5)
 blue_portal.hideturtle()
-blue_portal.setposition(1000,1000)
+blue_portal.setposition(1000, 1000)
 
 # Player movements / checking proximity of player and portal / portal travel
 def move_up():
     player.setheading(90)
     player.sety(player.ycor() + SPEED)
-    # # An option for smoother player movement, but messes with the portal functionality 
+    # # An option for smoother player movement, but messes with the portal functionality
     # length = len(up_token_bucket)
     # for _ in range(10-length):
     #     up_token_bucket.append("a")
-    if player.ycor() >= orange_portal.ycor() and player.xcor() >= (orange_portal.xcor() - 45) and player.xcor() <= (orange_portal.xcor() + 45) and is_touching_portal(player, orange_portal):
+    if (
+        player.ycor() >= orange_portal.ycor()
+        and player.xcor() >= (orange_portal.xcor() - 45)
+        and player.xcor() <= (orange_portal.xcor() + 45)
+        and is_touching_portal(player, orange_portal)
+    ):
         blue_portal_check()
-    if player.ycor() >= blue_portal.ycor() and player.xcor() >= (blue_portal.xcor() - 45) and player.xcor() <= (blue_portal.xcor() + 45) and is_touching_portal(player, blue_portal):
+    if (
+        player.ycor() >= blue_portal.ycor()
+        and player.xcor() >= (blue_portal.xcor() - 45)
+        and player.xcor() <= (blue_portal.xcor() + 45)
+        and is_touching_portal(player, blue_portal)
+    ):
         orange_portal_check()
 
 
 def move_down():
     player.setheading(270)
     player.sety(player.ycor() - SPEED)
-    # # An option for smoother player movement, but messes with the portal functionality 
+    # # An option for smoother player movement, but messes with the portal functionality
     # length = len(down_token_bucket)
     # for _ in range(10-length):
     #     down_token_bucket.append("a")
-    if player.ycor() <= orange_portal.ycor() and player.xcor() >= (orange_portal.xcor() - 45) and player.xcor() <= (orange_portal.xcor() + 45) and is_touching_portal(player, orange_portal):
+    if (
+        player.ycor() <= orange_portal.ycor()
+        and player.xcor() >= (orange_portal.xcor() - 45)
+        and player.xcor() <= (orange_portal.xcor() + 45)
+        and is_touching_portal(player, orange_portal)
+    ):
         blue_portal_check()
-    if player.ycor() <= blue_portal.ycor() and player.xcor() >= (blue_portal.xcor() - 45) and player.xcor() <= (blue_portal.xcor() + 45) and is_touching_portal(player, blue_portal):
+    if (
+        player.ycor() <= blue_portal.ycor()
+        and player.xcor() >= (blue_portal.xcor() - 45)
+        and player.xcor() <= (blue_portal.xcor() + 45)
+        and is_touching_portal(player, blue_portal)
+    ):
         orange_portal_check()
 
 
 def move_left():
     player.setheading(180)
     player.setx(player.xcor() - SPEED)
-    # # An option for smoother player movement, but messes with the portal functionality 
+    # # An option for smoother player movement, but messes with the portal functionality
     # length = len(left_token_bucket)
     # for _ in range(10-length):
     #     left_token_bucket.append("a")
-    if player.xcor() <= orange_portal.xcor() and player.ycor() >= (orange_portal.ycor() - 45) and player.ycor() <= (orange_portal.ycor() + 45) and is_touching_portal(player, orange_portal):
+    if (
+        player.xcor() <= orange_portal.xcor()
+        and player.ycor() >= (orange_portal.ycor() - 45)
+        and player.ycor() <= (orange_portal.ycor() + 45)
+        and is_touching_portal(player, orange_portal)
+    ):
         blue_portal_check()
-    if player.xcor() <= blue_portal.xcor() and player.ycor() >= (blue_portal.ycor() - 45) and player.ycor() <= (blue_portal.ycor() + 45) and is_touching_portal(player, blue_portal):
+    if (
+        player.xcor() <= blue_portal.xcor()
+        and player.ycor() >= (blue_portal.ycor() - 45)
+        and player.ycor() <= (blue_portal.ycor() + 45)
+        and is_touching_portal(player, blue_portal)
+    ):
         orange_portal_check()
 
 
 def move_right():
     player.setheading(0)
     player.setx(player.xcor() + SPEED)
-    # # An option for smoother player movement, but messes with the portal functionality 
+    # # An option for smoother player movement, but messes with the portal functionality
     # length = len(right_token_bucket)
     # for _ in range(10-length):
     #     right_token_bucket.append("a")
-    if player.xcor() >= orange_portal.xcor() and player.ycor() >= (orange_portal.ycor() - 45) and player.ycor() <= (orange_portal.ycor() + 45) and is_touching_portal(player, orange_portal):
+    if (
+        player.xcor() >= orange_portal.xcor()
+        and player.ycor() >= (orange_portal.ycor() - 45)
+        and player.ycor() <= (orange_portal.ycor() + 45)
+        and is_touching_portal(player, orange_portal)
+    ):
         blue_portal_check()
-    if player.xcor() >= blue_portal.xcor() and player.ycor() >= (blue_portal.ycor() - 45) and player.ycor() <= (blue_portal.ycor() + 45) and is_touching_portal(player, blue_portal):
+    if (
+        player.xcor() >= blue_portal.xcor()
+        and player.ycor() >= (blue_portal.ycor() - 45)
+        and player.ycor() <= (blue_portal.ycor() + 45)
+        and is_touching_portal(player, blue_portal)
+    ):
         orange_portal_check()
+
 
 # An option for smoother player movement, but messes with the portal functionality
 def up():
     player.sety(player.ycor() + SPEED)
+
+
 def down():
     player.sety(player.ycor() - SPEED)
+
+
 def left():
     player.setx(player.xcor() - SPEED)
+
+
 def right():
     player.setx(player.xcor() + SPEED)
 
@@ -196,27 +265,73 @@ def right():
 # Ice floor movements
 def up_ice():
     player.sety(player.ycor() + ice_speed)
-    if player.ycor() >= orange_portal.ycor() and player.xcor() >= (orange_portal.xcor() - 45) and player.xcor() <= (orange_portal.xcor() + 45) and is_touching_portal(player, orange_portal):
+    if (
+        player.ycor() >= orange_portal.ycor()
+        and player.xcor() >= (orange_portal.xcor() - 45)
+        and player.xcor() <= (orange_portal.xcor() + 45)
+        and is_touching_portal(player, orange_portal)
+    ):
         blue_portal_check()
-    if player.ycor() >= blue_portal.ycor() and player.xcor() >= (blue_portal.xcor() - 45) and player.xcor() <= (blue_portal.xcor() + 45) and is_touching_portal(player, blue_portal):
+    if (
+        player.ycor() >= blue_portal.ycor()
+        and player.xcor() >= (blue_portal.xcor() - 45)
+        and player.xcor() <= (blue_portal.xcor() + 45)
+        and is_touching_portal(player, blue_portal)
+    ):
         orange_portal_check()
+
+
 def down_ice():
     player.sety(player.ycor() + ice_speed)
-    if player.ycor() <= orange_portal.ycor() and player.xcor() >= (orange_portal.xcor() - 45) and player.xcor() <= (orange_portal.xcor() + 45) and is_touching_portal(player, orange_portal):
+    if (
+        player.ycor() <= orange_portal.ycor()
+        and player.xcor() >= (orange_portal.xcor() - 45)
+        and player.xcor() <= (orange_portal.xcor() + 45)
+        and is_touching_portal(player, orange_portal)
+    ):
         blue_portal_check()
-    if player.ycor() <= blue_portal.ycor() and player.xcor() >= (blue_portal.xcor() - 45) and player.xcor() <= (blue_portal.xcor() + 45) and is_touching_portal(player, blue_portal):
+    if (
+        player.ycor() <= blue_portal.ycor()
+        and player.xcor() >= (blue_portal.xcor() - 45)
+        and player.xcor() <= (blue_portal.xcor() + 45)
+        and is_touching_portal(player, blue_portal)
+    ):
         orange_portal_check()
+
+
 def left_ice():
     player.setx(player.xcor() + ice_speed)
-    if player.xcor() <= orange_portal.xcor() and player.ycor() >= (orange_portal.ycor() - 45) and player.ycor() <= (orange_portal.ycor() + 45) and is_touching_portal(player, orange_portal):
+    if (
+        player.xcor() <= orange_portal.xcor()
+        and player.ycor() >= (orange_portal.ycor() - 45)
+        and player.ycor() <= (orange_portal.ycor() + 45)
+        and is_touching_portal(player, orange_portal)
+    ):
         blue_portal_check()
-    if player.xcor() <= blue_portal.xcor() and player.ycor() >= (blue_portal.ycor() - 45) and player.ycor() <= (blue_portal.ycor() + 45) and is_touching_portal(player, blue_portal):
+    if (
+        player.xcor() <= blue_portal.xcor()
+        and player.ycor() >= (blue_portal.ycor() - 45)
+        and player.ycor() <= (blue_portal.ycor() + 45)
+        and is_touching_portal(player, blue_portal)
+    ):
         orange_portal_check()
+
+
 def right_ice():
     player.setx(player.xcor() + ice_speed)
-    if player.xcor() >= orange_portal.xcor() and player.ycor() >= (orange_portal.ycor() - 45) and player.ycor() <= (orange_portal.ycor() + 45) and is_touching_portal(player, orange_portal):
+    if (
+        player.xcor() >= orange_portal.xcor()
+        and player.ycor() >= (orange_portal.ycor() - 45)
+        and player.ycor() <= (orange_portal.ycor() + 45)
+        and is_touching_portal(player, orange_portal)
+    ):
         blue_portal_check()
-    if player.xcor() >= blue_portal.xcor() and player.ycor() >= (blue_portal.ycor() - 45) and player.ycor() <= (blue_portal.ycor() + 45) and is_touching_portal(player, blue_portal):
+    if (
+        player.xcor() >= blue_portal.xcor()
+        and player.ycor() >= (blue_portal.ycor() - 45)
+        and player.ycor() <= (blue_portal.ycor() + 45)
+        and is_touching_portal(player, blue_portal)
+    ):
         orange_portal_check()
 
 
@@ -254,7 +369,7 @@ def orange_portal_check():
         player.setposition(orange_portal.xcor() - 46, orange_portal.ycor())
 
 
-# Resets the starting glide times to the current time 
+# Resets the starting glide times to the current time
 def ice_move_up():
     player.setheading(90)
     global STARTED_GLIDING_UP_AT
@@ -279,7 +394,7 @@ def ice_move_right():
     STARTED_GLIDING_RIGHT_AT = datetime.now()
 
 
-# Enemy AI is idle by default, but will follow the player when approached 
+# Enemy AI is idle by default, but will follow the player when approached
 def enemy_ai_active():
     global set_time
     global set_time_a
@@ -314,7 +429,7 @@ def follow_player(x):
     if player.ycor() > x.ycor():
         x.sety(x.ycor() + 1.5)
 
-    
+
 # Attaches the portal gun to the player once the player and portal gun are in proximity
 def equipped_portal_gun():
     global acquired_portal_gun
@@ -327,28 +442,28 @@ def equipped_portal_gun():
     if acquired_portal_gun:
         # UP
         if player.heading() == 90:
-            portal_gun.setposition(player.xcor()-15, player.ycor()+5)
+            portal_gun.setposition(player.xcor() - 15, player.ycor() + 5)
             if portal_gun_color == "blue":
                 portal_gun.shape("assets/sprites/portal_gun_up.gif")
             if portal_gun_color == "orange":
                 portal_gun.shape("assets/sprites/portal_gun_orange_up.gif")
         # DOWN
         if player.heading() == 270:
-            portal_gun.setposition(player.xcor()+16, player.ycor()-3)
+            portal_gun.setposition(player.xcor() + 16, player.ycor() - 3)
             if portal_gun_color == "blue":
                 portal_gun.shape("assets/sprites/portal_gun_down.gif")
             if portal_gun_color == "orange":
                 portal_gun.shape("assets/sprites/portal_gun_orange_down.gif")
         # LEFT
         if player.heading() == 180:
-            portal_gun.setposition(player.xcor()-4, player.ycor()-15)
+            portal_gun.setposition(player.xcor() - 4, player.ycor() - 15)
             if portal_gun_color == "blue":
                 portal_gun.shape("assets/sprites/portal_gun_left.gif")
             if portal_gun_color == "orange":
                 portal_gun.shape("assets/sprites/portal_gun_orange_left.gif")
         # RIGHT
         if player.heading() == 0:
-            portal_gun.setposition(player.xcor()+5, player.ycor()+15)
+            portal_gun.setposition(player.xcor() + 5, player.ycor() + 15)
             if portal_gun_color == "blue":
                 portal_gun.shape("assets/sprites/portal_gun_right.gif")
             if portal_gun_color == "orange":
@@ -370,24 +485,24 @@ def enemy_ai_idle_state():
     sec_b = elapsed_time_b.total_seconds()
 
     if sec_a < 1 and looper == "left":
-        enemy_ai.setx(enemy_ai.xcor()-1)
+        enemy_ai.setx(enemy_ai.xcor() - 1)
         set_time_b = datetime.now()
-        if sec_a > .8:
+        if sec_a > 0.8:
             looper = "down"
     if sec_b < 1 and looper == "down":
-        enemy_ai.sety(enemy_ai.ycor()-1)
+        enemy_ai.sety(enemy_ai.ycor() - 1)
         set_time_a = datetime.now()
-        if sec_b > .8:
+        if sec_b > 0.8:
             looper = "right"
     if sec_a <= 1 and looper == "right":
-        enemy_ai.setx(enemy_ai.xcor()+1)
+        enemy_ai.setx(enemy_ai.xcor() + 1)
         set_time_b = datetime.now()
-        if sec_a > .8:
+        if sec_a > 0.8:
             looper = "up"
     if sec_b <= 1 and looper == "up":
-        enemy_ai.sety(enemy_ai.ycor()+1)
+        enemy_ai.sety(enemy_ai.ycor() + 1)
         set_time_a = datetime.now()
-        if sec_b > .8:
+        if sec_b > 0.8:
             looper = "left"
 
 
@@ -397,7 +512,7 @@ def fire_orange_portal_up():
     if orange_portal_state == "ready":
         portal_gun_color = "orange"
         player.setheading(90)
-        portal_gun.setposition(player.xcor()-15, player.ycor()+5)
+        portal_gun.setposition(player.xcor() - 15, player.ycor() + 5)
         orange_portal.shapesize(0.5, 0.5)
         orange_portal.setheading(90)
         os.system("afplay assets/sounds/portal_fire.wav&")
@@ -415,7 +530,7 @@ def fire_orange_portal_down():
     if orange_portal_state == "ready":
         portal_gun_color = "orange"
         player.setheading(270)
-        portal_gun.setposition(player.xcor()+16, player.ycor()-3)
+        portal_gun.setposition(player.xcor() + 16, player.ycor() - 3)
         orange_portal.shapesize(0.5, 0.5)
         orange_portal.setheading(270)
         os.system("afplay assets/sounds/portal_fire.wav&")
@@ -433,7 +548,7 @@ def fire_orange_portal_left():
     if orange_portal_state == "ready":
         portal_gun_color = "orange"
         player.setheading(180)
-        portal_gun.setposition(player.xcor()-4, player.ycor()-15)
+        portal_gun.setposition(player.xcor() - 4, player.ycor() - 15)
         orange_portal.shapesize(0.5, 0.5)
         orange_portal.setheading(180)
         os.system("afplay assets/sounds/portal_fire.wav&")
@@ -451,7 +566,7 @@ def fire_orange_portal_right():
     if orange_portal_state == "ready":
         portal_gun_color = "orange"
         player.setheading(0)
-        portal_gun.setposition(player.xcor()+5, player.ycor()+15)
+        portal_gun.setposition(player.xcor() + 5, player.ycor() + 15)
         orange_portal.shapesize(0.5, 0.5)
         orange_portal.setheading(0)
         os.system("afplay assets/sounds/portal_fire.wav&")
@@ -469,7 +584,7 @@ def fire_blue_portal_up():
     if blue_portal_state == "ready":
         portal_gun_color = "blue"
         player.setheading(90)
-        portal_gun.setposition(player.xcor()-15, player.ycor()+5)
+        portal_gun.setposition(player.xcor() - 15, player.ycor() + 5)
         blue_portal.shapesize(0.5, 0.5)
         blue_portal.setheading(90)
         os.system("afplay assets/sounds/portal_fire.wav&")
@@ -487,7 +602,7 @@ def fire_blue_portal_down():
     if blue_portal_state == "ready":
         portal_gun_color = "blue"
         player.setheading(270)
-        portal_gun.setposition(player.xcor()+16, player.ycor()-3)
+        portal_gun.setposition(player.xcor() + 16, player.ycor() - 3)
         blue_portal.shapesize(0.5, 0.5)
         blue_portal.setheading(270)
         os.system("afplay assets/sounds/portal_fire.wav&")
@@ -505,7 +620,7 @@ def fire_blue_portal_left():
     if blue_portal_state == "ready":
         portal_gun_color = "blue"
         player.setheading(180)
-        portal_gun.setposition(player.xcor()-4, player.ycor()-15)
+        portal_gun.setposition(player.xcor() - 4, player.ycor() - 15)
         blue_portal.shapesize(0.5, 0.5)
         blue_portal.setheading(180)
         os.system("afplay assets/sounds/portal_fire.wav&")
@@ -523,7 +638,7 @@ def fire_blue_portal_right():
     if blue_portal_state == "ready":
         portal_gun_color = "blue"
         player.setheading(0)
-        portal_gun.setposition(player.xcor()+5, player.ycor()+15)
+        portal_gun.setposition(player.xcor() + 5, player.ycor() + 15)
         blue_portal.shapesize(0.5, 0.5)
         blue_portal.setheading(0)
         os.system("afplay assets/sounds/portal_fire.wav&")
@@ -573,20 +688,30 @@ def ice_floor_check():
         screen.onkeypress(move_left, "Left")
         screen.onkeypress(move_right, "Right")
         screen.bgpic("assets/sprites/portal.gif")
-        
+
         global STARTED_GLIDING_UP_AT
-        STARTED_GLIDING_UP_AT = datetime.now() - timedelta(seconds=GLIDE_DURATION_IN_SECONDS + 1)
+        STARTED_GLIDING_UP_AT = datetime.now() - timedelta(
+            seconds=GLIDE_DURATION_IN_SECONDS + 1
+        )
         global STARTED_GLIDING_RIGHT_AT
-        STARTED_GLIDING_RIGHT_AT = datetime.now() - timedelta(seconds=GLIDE_DURATION_IN_SECONDS + 1)
+        STARTED_GLIDING_RIGHT_AT = datetime.now() - timedelta(
+            seconds=GLIDE_DURATION_IN_SECONDS + 1
+        )
         global STARTED_GLIDING_LEFT_AT
-        STARTED_GLIDING_LEFT_AT = datetime.now() - timedelta(seconds=GLIDE_DURATION_IN_SECONDS + 1)
+        STARTED_GLIDING_LEFT_AT = datetime.now() - timedelta(
+            seconds=GLIDE_DURATION_IN_SECONDS + 1
+        )
         global STARTED_GLIDING_DOWN_AT
-        STARTED_GLIDING_DOWN_AT = datetime.now() - timedelta(seconds=GLIDE_DURATION_IN_SECONDS + 1)
+        STARTED_GLIDING_DOWN_AT = datetime.now() - timedelta(
+            seconds=GLIDE_DURATION_IN_SECONDS + 1
+        )
 
 
 # Touching / proximity calculations
 def is_touching(t1, t2):
-    distance = math.sqrt(math.pow(t1.xcor() - t2.xcor(), 2) + math.pow(t1.ycor() - t2.ycor(), 2))
+    distance = math.sqrt(
+        math.pow(t1.xcor() - t2.xcor(), 2) + math.pow(t1.ycor() - t2.ycor(), 2)
+    )
     if distance < 15:
         return True
     else:
@@ -594,7 +719,9 @@ def is_touching(t1, t2):
 
 
 def is_touching_portal(t1, t2):
-    distance = math.sqrt(math.pow(t1.xcor() - t2.xcor(), 2) + math.pow(t1.ycor() - t2.ycor(), 2))
+    distance = math.sqrt(
+        math.pow(t1.xcor() - t2.xcor(), 2) + math.pow(t1.ycor() - t2.ycor(), 2)
+    )
     if distance < 45:
         return True
     else:
@@ -602,11 +729,14 @@ def is_touching_portal(t1, t2):
 
 
 def is_in_proximity(t1, t2):
-    distance = math.sqrt(math.pow(t1.xcor() - t2.xcor(), 2) + math.pow(t1.ycor() - t2.ycor(), 2))
+    distance = math.sqrt(
+        math.pow(t1.xcor() - t2.xcor(), 2) + math.pow(t1.ycor() - t2.ycor(), 2)
+    )
     if distance < 200:
         return True
     else:
         return False
+
 
 # Keyboard bindings
 screen.listen()
@@ -624,7 +754,7 @@ while True:
     ice_floor_check()
     menu_check()
 
-    # # An option for smoother player movement, but messes with the portal functionality 
+    # # An option for smoother player movement, but messes with the portal functionality
     if up_token_bucket:
         up()
         up_token_bucket.pop()
@@ -674,22 +804,22 @@ while True:
     if orange_portal.ycor() > 490:
         orange_portal.setposition(orange_portal.xcor(), 500)
         orange_portal.shape("square")
-        orange_portal.shapesize(5, .4)
+        orange_portal.shapesize(5, 0.4)
         orange_portal_state = "ready"
     if orange_portal.ycor() < -490:
         orange_portal.setposition(orange_portal.xcor(), -500)
         orange_portal.shape("square")
-        orange_portal.shapesize(5, .4)
+        orange_portal.shapesize(5, 0.4)
         orange_portal_state = "ready"
     if orange_portal.xcor() > 490:
         orange_portal.setposition(500, orange_portal.ycor())
         orange_portal.shape("square")
-        orange_portal.shapesize(5, .4)
+        orange_portal.shapesize(5, 0.4)
         orange_portal_state = "ready"
     if orange_portal.xcor() < -490:
         orange_portal.setposition(-500, orange_portal.ycor())
         orange_portal.shape("square")
-        orange_portal.shapesize(5, .4)
+        orange_portal.shapesize(5, 0.4)
         orange_portal_state = "ready"
 
     # Move the blue portal
@@ -717,26 +847,28 @@ while True:
     if blue_portal.ycor() > 490:
         blue_portal.setposition(blue_portal.xcor(), 500)
         blue_portal.shape("square")
-        blue_portal.shapesize(5, .4)
+        blue_portal.shapesize(5, 0.4)
         blue_portal_state = "ready"
     if blue_portal.ycor() < -490:
         blue_portal.setposition(blue_portal.xcor(), -500)
         blue_portal.shape("square")
-        blue_portal.shapesize(5, .4)
+        blue_portal.shapesize(5, 0.4)
         blue_portal_state = "ready"
     if blue_portal.xcor() > 490:
         blue_portal.setposition(500, blue_portal.ycor())
         blue_portal.shape("square")
-        blue_portal.shapesize(5, .4)
+        blue_portal.shapesize(5, 0.4)
         blue_portal_state = "ready"
     if blue_portal.xcor() < -490:
         blue_portal.setposition(-500, blue_portal.ycor())
         blue_portal.shape("square")
-        blue_portal.shapesize(5, .4)
+        blue_portal.shapesize(5, 0.4)
         blue_portal_state = "ready"
 
     # Ice floor glide calculations
-    if datetime.now() - STARTED_GLIDING_UP_AT <= timedelta(seconds=GLIDE_DURATION_IN_SECONDS):
+    if datetime.now() - STARTED_GLIDING_UP_AT <= timedelta(
+        seconds=GLIDE_DURATION_IN_SECONDS
+    ):
         elapsed_time = datetime.now() - STARTED_GLIDING_UP_AT
         glide_numerator = 1
         glide_denominator = max([glide_numerator, elapsed_time.total_seconds()])
@@ -744,7 +876,9 @@ while True:
         ice_speed = speed
         up_ice()
 
-    if datetime.now() - STARTED_GLIDING_DOWN_AT <= timedelta(seconds=GLIDE_DURATION_IN_SECONDS):
+    if datetime.now() - STARTED_GLIDING_DOWN_AT <= timedelta(
+        seconds=GLIDE_DURATION_IN_SECONDS
+    ):
         elapsed_time = datetime.now() - STARTED_GLIDING_DOWN_AT
         glide_numerator = 1
         glide_denominator = max([glide_numerator, elapsed_time.total_seconds()])
@@ -752,7 +886,9 @@ while True:
         ice_speed = speed * -1
         down_ice()
 
-    if datetime.now() - STARTED_GLIDING_LEFT_AT <= timedelta(seconds=GLIDE_DURATION_IN_SECONDS):
+    if datetime.now() - STARTED_GLIDING_LEFT_AT <= timedelta(
+        seconds=GLIDE_DURATION_IN_SECONDS
+    ):
         elapsed_time = datetime.now() - STARTED_GLIDING_LEFT_AT
         glide_numerator = 1
         glide_denominator = max([glide_numerator, elapsed_time.total_seconds()])
@@ -760,7 +896,9 @@ while True:
         ice_speed = speed * -1
         left_ice()
 
-    if datetime.now() - STARTED_GLIDING_RIGHT_AT <= timedelta(seconds=GLIDE_DURATION_IN_SECONDS):
+    if datetime.now() - STARTED_GLIDING_RIGHT_AT <= timedelta(
+        seconds=GLIDE_DURATION_IN_SECONDS
+    ):
         elapsed_time = datetime.now() - STARTED_GLIDING_RIGHT_AT
         glide_numerator = 1
         glide_denominator = max([glide_numerator, elapsed_time.total_seconds()])
