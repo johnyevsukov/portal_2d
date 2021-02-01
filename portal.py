@@ -1,9 +1,10 @@
 import math
-import random
-from datetime import datetime, timedelta
 import os
+import random
 import time
 import turtle
+from datetime import datetime, timedelta
+
 
 # For less jerky player movement you can uncomment the grayed out code, comment out the four current player movement code lines, and set SPEED to 4
 
