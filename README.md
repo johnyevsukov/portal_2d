@@ -15,6 +15,10 @@ Checkout the source code:
 
     git clone https://github.com/johnyevsukov/portal_2d.git
 
+Navigate into the repo:
+
+    cd portal_2d/
+
 Run the game:
 
     make game
