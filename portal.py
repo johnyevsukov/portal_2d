@@ -6,10 +6,9 @@ import time
 import turtle
 
 # For less jerky player movement you can uncomment the grayed out code, comment out the four current player movement code lines, and set SPEED to 4
-# The ice floor disables portal use :(
 
 SPEED = 20
-PORTAL_SPEED = 15
+PORTAL_SPEED = 30
 GLIDE_DURATION_IN_SECONDS = 4
 
 ice_speed = 15
@@ -23,9 +22,13 @@ set_time_b = datetime.now()
 
 looper = "left"
 
+portal_gun_color = "blue"
+
 acquired_portal_gun = False
 orange_portal_state = "ready"
 blue_portal_state = "ready"
+
+portal_gun_acquired_sound = ["a"]
 
 turret_sound_bucket = []
 turret_lost_bucket = []
@@ -35,8 +38,8 @@ down_token_bucket = []
 left_token_bucket = []
 right_token_bucket = []
 
-turret_sounds = ["afplay turret_there_you_are.wav&", "afplay turret_I_see_you.wav&", "afplay turret_gotcha.wav&"]
-portal_gun_gifs = ["portal_gun_up.gif", "portal_gun_down.gif", "portal_gun_left.gif", "portal_gun_right.gif", "control_menu.gif"]
+turret_sounds = ["afplay assets/sounds/turret_there_you_are.wav&", "afplay assets/sounds/turret_I_see_you.wav&", "afplay assets/sounds/turret_gotcha.wav&"]
+portal_gun_gifs = ["assets/sprites/portal_gun_up.gif", "assets/sprites/portal_gun_down.gif", "assets/sprites/portal_gun_left.gif", "assets/sprites/portal_gun_right.gif", "assets/sprites/portal_gun_orange_up.gif", "assets/sprites/portal_gun_orange_down.gif", "assets/sprites/portal_gun_orange_left.gif", "assets/sprites/portal_gun_orange_right.gif",  "assets/sprites/control_menu.gif"]
 
 for gif in portal_gun_gifs:
     turtle.register_shape(gif)
@@ -56,7 +59,7 @@ STARTED_GLIDING_DOWN_AT = datetime.now() - timedelta(seconds=GLIDE_DURATION_IN_S
 
 # Game screen
 screen = turtle.Screen()
-screen.bgpic("portal.gif")
+screen.bgpic("assets/sprites/portal.gif")
 screen.bgcolor("gray")
 screen.title("Enemy AI - Worlds")
 screen.tracer(0)
@@ -79,7 +82,7 @@ control_menu = turtle.Turtle()
 control_menu.speed(0)
 control_menu.penup()
 control_menu.setposition(0,0)
-control_menu.shape("control_menu.gif")
+control_menu.shape("assets/sprites/control_menu.gif")
 control_menu.hideturtle()
 
 # Player
@@ -103,7 +106,7 @@ enemy_ai.setposition(0,375)
 # Poratl gun
 portal_gun = turtle.Turtle()
 portal_gun.speed(0)
-portal_gun.shape("portal_gun_right.gif")
+portal_gun.shape("assets/sprites/portal_gun_right.gif")
 portal_gun.penup()
 portal_gun.setposition(-375,0)
 
@@ -193,17 +196,33 @@ def right():
 # Ice floor movements
 def up_ice():
     player.sety(player.ycor() + ice_speed)
+    if player.ycor() >= orange_portal.ycor() and player.xcor() >= (orange_portal.xcor() - 45) and player.xcor() <= (orange_portal.xcor() + 45) and is_touching_portal(player, orange_portal):
+        blue_portal_check()
+    if player.ycor() >= blue_portal.ycor() and player.xcor() >= (blue_portal.xcor() - 45) and player.xcor() <= (blue_portal.xcor() + 45) and is_touching_portal(player, blue_portal):
+        orange_portal_check()
 def down_ice():
     player.sety(player.ycor() + ice_speed)
+    if player.ycor() <= orange_portal.ycor() and player.xcor() >= (orange_portal.xcor() - 45) and player.xcor() <= (orange_portal.xcor() + 45) and is_touching_portal(player, orange_portal):
+        blue_portal_check()
+    if player.ycor() <= blue_portal.ycor() and player.xcor() >= (blue_portal.xcor() - 45) and player.xcor() <= (blue_portal.xcor() + 45) and is_touching_portal(player, blue_portal):
+        orange_portal_check()
 def left_ice():
     player.setx(player.xcor() + ice_speed)
+    if player.xcor() <= orange_portal.xcor() and player.ycor() >= (orange_portal.ycor() - 45) and player.ycor() <= (orange_portal.ycor() + 45) and is_touching_portal(player, orange_portal):
+        blue_portal_check()
+    if player.xcor() <= blue_portal.xcor() and player.ycor() >= (blue_portal.ycor() - 45) and player.ycor() <= (blue_portal.ycor() + 45) and is_touching_portal(player, blue_portal):
+        orange_portal_check()
 def right_ice():
     player.setx(player.xcor() + ice_speed)
+    if player.xcor() >= orange_portal.xcor() and player.ycor() >= (orange_portal.ycor() - 45) and player.ycor() <= (orange_portal.ycor() + 45) and is_touching_portal(player, orange_portal):
+        blue_portal_check()
+    if player.xcor() >= blue_portal.xcor() and player.ycor() >= (blue_portal.ycor() - 45) and player.ycor() <= (blue_portal.ycor() + 45) and is_touching_portal(player, blue_portal):
+        orange_portal_check()
 
 
 # Check how the player exits the blue portal
 def blue_portal_check():
-    os.system("afplay exit_warp.wav&")
+    os.system("afplay assets/sounds/exit_warp.wav&")
     if blue_portal.ycor() == -500:
         player.setheading(90)
         player.setposition(blue_portal.xcor(), blue_portal.ycor() + 46)
@@ -220,7 +239,7 @@ def blue_portal_check():
 
 # Check how the player exits the orange portal
 def orange_portal_check():
-    os.system("afplay exit_warp.wav&")
+    os.system("afplay assets/sounds/exit_warp.wav&")
     if orange_portal.ycor() == -500:
         player.setheading(90)
         player.setposition(orange_portal.xcor(), orange_portal.ycor() + 46)
@@ -280,7 +299,7 @@ def enemy_ai_active():
         for _ in range(1 - len(turret_sound_bucket)):
             turret_sound_bucket.append("a")
         if turret_lost_bucket:
-            os.system("afplay turret_target_lost.wav&")
+            os.system("afplay assets/sounds/turret_target_lost.wav&")
             turret_lost_bucket.pop()
 
 
@@ -301,24 +320,39 @@ def equipped_portal_gun():
     global acquired_portal_gun
     if is_touching(portal_gun, player):
         acquired_portal_gun = True
+        if portal_gun_acquired_sound:
+            os.system("afplay assets/sounds/handheld_portal_device.wav&")
+            portal_gun_acquired_sound.pop()
 
     if acquired_portal_gun:
         # UP
         if player.heading() == 90:
             portal_gun.setposition(player.xcor()-15, player.ycor()+5)
-            portal_gun.shape("portal_gun_up.gif")
+            if portal_gun_color == "blue":
+                portal_gun.shape("assets/sprites/portal_gun_up.gif")
+            if portal_gun_color == "orange":
+                portal_gun.shape("assets/sprites/portal_gun_orange_up.gif")
         # DOWN
         if player.heading() == 270:
             portal_gun.setposition(player.xcor()+16, player.ycor()-3)
-            portal_gun.shape("portal_gun_down.gif")
+            if portal_gun_color == "blue":
+                portal_gun.shape("assets/sprites/portal_gun_down.gif")
+            if portal_gun_color == "orange":
+                portal_gun.shape("assets/sprites/portal_gun_orange_down.gif")
         # LEFT
         if player.heading() == 180:
             portal_gun.setposition(player.xcor()-4, player.ycor()-15)
-            portal_gun.shape("portal_gun_left.gif")
+            if portal_gun_color == "blue":
+                portal_gun.shape("assets/sprites/portal_gun_left.gif")
+            if portal_gun_color == "orange":
+                portal_gun.shape("assets/sprites/portal_gun_orange_left.gif")
         # RIGHT
         if player.heading() == 0:
             portal_gun.setposition(player.xcor()+5, player.ycor()+15)
-            portal_gun.shape("portal_gun_right.gif")
+            if portal_gun_color == "blue":
+                portal_gun.shape("assets/sprites/portal_gun_right.gif")
+            if portal_gun_color == "orange":
+                portal_gun.shape("assets/sprites/portal_gun_orange_right.gif")
 
 
 # Has the enemy go in circles according to two timers constantly switching back and forth. This could aslo be achieved with a for loop with fd() and lt()
@@ -359,12 +393,14 @@ def enemy_ai_idle_state():
 
 def fire_orange_portal_up():
     global orange_portal_state
+    global portal_gun_color
     if orange_portal_state == "ready":
+        portal_gun_color = "orange"
         player.setheading(90)
         portal_gun.setposition(player.xcor()-15, player.ycor()+5)
         orange_portal.shapesize(0.5, 0.5)
         orange_portal.setheading(90)
-        os.system("afplay portal_fire.wav&")
+        os.system("afplay assets/sounds/portal_fire.wav&")
         orange_portal_state = "fire_up"
         # Move the portal just above the portal gun
         x = portal_gun.xcor()
@@ -375,12 +411,14 @@ def fire_orange_portal_up():
 
 def fire_orange_portal_down():
     global orange_portal_state
+    global portal_gun_color
     if orange_portal_state == "ready":
+        portal_gun_color = "orange"
         player.setheading(270)
         portal_gun.setposition(player.xcor()+16, player.ycor()-3)
         orange_portal.shapesize(0.5, 0.5)
         orange_portal.setheading(270)
-        os.system("afplay portal_fire.wav&")
+        os.system("afplay assets/sounds/portal_fire.wav&")
         orange_portal_state = "fire_down"
         # Move the portal just below the portal gun
         x = portal_gun.xcor()
@@ -391,12 +429,14 @@ def fire_orange_portal_down():
 
 def fire_orange_portal_left():
     global orange_portal_state
+    global portal_gun_color
     if orange_portal_state == "ready":
+        portal_gun_color = "orange"
         player.setheading(180)
         portal_gun.setposition(player.xcor()-4, player.ycor()-15)
         orange_portal.shapesize(0.5, 0.5)
         orange_portal.setheading(180)
-        os.system("afplay portal_fire.wav&")
+        os.system("afplay assets/sounds/portal_fire.wav&")
         orange_portal_state = "fire_left"
         # Move the portal to just left of the portal gun
         x = portal_gun.xcor() - 10
@@ -407,12 +447,14 @@ def fire_orange_portal_left():
 
 def fire_orange_portal_right():
     global orange_portal_state
+    global portal_gun_color
     if orange_portal_state == "ready":
+        portal_gun_color = "orange"
         player.setheading(0)
         portal_gun.setposition(player.xcor()+5, player.ycor()+15)
         orange_portal.shapesize(0.5, 0.5)
         orange_portal.setheading(0)
-        os.system("afplay portal_fire.wav&")
+        os.system("afplay assets/sounds/portal_fire.wav&")
         orange_portal_state = "fire_right"
         # Move the weapon to just right of the portal gun
         x = portal_gun.xcor() + 10
@@ -423,12 +465,14 @@ def fire_orange_portal_right():
 
 def fire_blue_portal_up():
     global blue_portal_state
+    global portal_gun_color
     if blue_portal_state == "ready":
+        portal_gun_color = "blue"
         player.setheading(90)
         portal_gun.setposition(player.xcor()-15, player.ycor()+5)
         blue_portal.shapesize(0.5, 0.5)
         blue_portal.setheading(90)
-        os.system("afplay portal_fire.wav&")
+        os.system("afplay assets/sounds/portal_fire.wav&")
         blue_portal_state = "fire_up"
         # Move the portal just above the portal gun
         x = portal_gun.xcor()
@@ -439,12 +483,14 @@ def fire_blue_portal_up():
 
 def fire_blue_portal_down():
     global blue_portal_state
+    global portal_gun_color
     if blue_portal_state == "ready":
+        portal_gun_color = "blue"
         player.setheading(270)
         portal_gun.setposition(player.xcor()+16, player.ycor()-3)
         blue_portal.shapesize(0.5, 0.5)
         blue_portal.setheading(270)
-        os.system("afplay portal_fire.wav&")
+        os.system("afplay assets/sounds/portal_fire.wav&")
         blue_portal_state = "fire_down"
         # Move the portal just below the portal gun
         x = portal_gun.xcor()
@@ -455,12 +501,14 @@ def fire_blue_portal_down():
 
 def fire_blue_portal_left():
     global blue_portal_state
+    global portal_gun_color
     if blue_portal_state == "ready":
+        portal_gun_color = "blue"
         player.setheading(180)
         portal_gun.setposition(player.xcor()-4, player.ycor()-15)
         blue_portal.shapesize(0.5, 0.5)
         blue_portal.setheading(180)
-        os.system("afplay portal_fire.wav&")
+        os.system("afplay assets/sounds/portal_fire.wav&")
         blue_portal_state = "fire_left"
         # Move the portal to just left of the portal gun
         x = portal_gun.xcor() - 10
@@ -471,12 +519,14 @@ def fire_blue_portal_left():
 
 def fire_blue_portal_right():
     global blue_portal_state
+    global portal_gun_color
     if blue_portal_state == "ready":
+        portal_gun_color = "blue"
         player.setheading(0)
         portal_gun.setposition(player.xcor()+5, player.ycor()+15)
         blue_portal.shapesize(0.5, 0.5)
         blue_portal.setheading(0)
-        os.system("afplay portal_fire.wav&")
+        os.system("afplay assets/sounds/portal_fire.wav&")
         blue_portal_state = "fire_right"
         # Move the portal to just right of the portal gun
         x = portal_gun.xcor() + 10
@@ -515,14 +565,14 @@ def ice_floor_check():
         screen.onkeypress(ice_move_down, "Down")
         screen.onkeypress(ice_move_left, "Left")
         screen.onkeypress(ice_move_right, "Right")
-        screen.bgpic("portal_ice.gif")
+        screen.bgpic("assets/sprites/portal_ice.gif")
     if ice_state == False:
         screen.listen()
         screen.onkeypress(move_up, "Up")
         screen.onkeypress(move_down, "Down")
         screen.onkeypress(move_left, "Left")
         screen.onkeypress(move_right, "Right")
-        screen.bgpic("portal.gif")
+        screen.bgpic("assets/sprites/portal.gif")
         
         global STARTED_GLIDING_UP_AT
         STARTED_GLIDING_UP_AT = datetime.now() - timedelta(seconds=GLIDE_DURATION_IN_SECONDS + 1)
